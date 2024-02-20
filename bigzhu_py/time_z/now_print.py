@@ -1,5 +1,5 @@
 
-from .now import now
+from now import now
 
 
 # print whith zh_now time

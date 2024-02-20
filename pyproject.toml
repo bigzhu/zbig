@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.12"
 pyTelegramBotAPI = "^4.16.1"
 pytz = "^2024.1"
+environs = "^10.3.0"
 
 [tool.poetry.group.dev.dependencies]
 pyTelegramBotAPI = "^4.16.1"
