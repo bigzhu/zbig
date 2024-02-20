@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "bigzhu-py"
-version = "0.1.0"
+name = "bigzhu_py"
+version = "0.1.1"
 description = "My Python Utility Library"
 authors = ["bigzhu <vermiliondun@gmail.com>"]
 readme = "README.md"

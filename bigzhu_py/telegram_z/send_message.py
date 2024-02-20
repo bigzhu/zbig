@@ -1,4 +1,4 @@
-from time_z.now import now
+from bigzhu_py.time_z import now
 from .define import bot, CHAT_ID
 
 

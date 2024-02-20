@@ -1,5 +1,5 @@
 
-from time_z import now
+from bigzhu_py.time_z import now
 
 
 # print whith zh_now time
