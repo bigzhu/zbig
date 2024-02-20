@@ -1,4 +1,5 @@
-from bigzhu_py.time_z import now_print, now
+from bigzhu_py.time_z import now
+from bigzhu_py.print_z import now_print
 import re
 
 
