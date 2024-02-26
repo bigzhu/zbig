@@ -1,5 +1,5 @@
 
-from zlib import ztime
+from zbig import ztime
 
 
 # print whith zh_now time

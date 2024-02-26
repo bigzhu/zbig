@@ -24,4 +24,4 @@ if __name__ == "__main__":
         ["root", "racknerd.bigzhu.net", "racknerd"],
         ["bigzhu", "ssh.entube.app", "digitalocean"],
     ]
-    table(data, " ~ ")
+    table(data, "~")
