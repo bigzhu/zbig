@@ -9,7 +9,7 @@ def get_max_lens(rows: list):
     return max_len
 
 
-def table_print(rows: list, spliter: str):
+def table(rows: list, spliter: str):
     max_lens = get_max_lens(rows)
     for row in rows:
         # 有可能塞入其他类型, 一律转 str
@@ -24,4 +24,4 @@ if __name__ == "__main__":
         ["root", "racknerd.bigzhu.net", "racknerd"],
         ["bigzhu", "ssh.entube.app", "digitalocean"],
     ]
-    table_print(data, " ~ ")
+    table(data, " ~ ")

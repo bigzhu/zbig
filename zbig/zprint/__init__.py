@@ -3,8 +3,8 @@ Some tool
 
 Print python library.
 """
-from .now_print import now_print
-from .table_print import table_print
+from .now import cn_now
+from .table import table 
 
 __version__ = "0.1.0"
 __author__ = "Big Zhu"

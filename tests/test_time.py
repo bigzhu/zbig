@@ -1,5 +1,5 @@
-from bigzhu_py.time_z import now
-from bigzhu_py.print_z import now_print
+from zlib.time_z import now
+from zlib.print_z import now_print
 import re
 
 
