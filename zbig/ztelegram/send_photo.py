@@ -1,4 +1,4 @@
-from .zdefine import bot, CHAT_ID
+from .define import bot, CHAT_ID
 
 
 def send_photo(file_path: str, caption: str):

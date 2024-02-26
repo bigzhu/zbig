@@ -1,6 +1,5 @@
-# from .zdefine import TEL_TOKEN
-import zdefine
+from .define import TEL_TOKEN
 
 
 def test_define():
-    assert zdefine.TEL_TOKEN == ''''''
+    assert TEL_TOKEN == ''''''

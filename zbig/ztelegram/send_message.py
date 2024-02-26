@@ -1,5 +1,5 @@
-from zlib.ztime import cn_now
-from .zdefine import bot, CHAT_ID
+from zbig.ztime import cn_now
+from .define import bot, CHAT_ID
 
 
 def send_message(message: str):
@@ -7,4 +7,4 @@ def send_message(message: str):
 
 
 if __name__ == "__main__":
-    send_message('zlib send_message test')
+    send_message('zbig send_message test')
