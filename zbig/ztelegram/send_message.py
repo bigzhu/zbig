@@ -1,5 +1,5 @@
 from zlib.ztime import cn_now
-from .define import bot, CHAT_ID
+from .zdefine import bot, CHAT_ID
 
 
 def send_message(message: str):
