@@ -28,7 +28,6 @@ def get_max_lens(rows: list):
 
 def table(rows: list, spliter: str):
     max_lens = get_max_lens(rows)
-    print(max_lens)
     for row in rows:
         # formated_row = [str(row[i]).ljust(max_lens[i]) for i in range(len(row))]
         # ljust 使用 len 判断长度, 支持非英文字符, 导致对每个非英文字符多填充了一个空白
