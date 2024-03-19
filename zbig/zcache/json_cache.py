@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import json
 import os
 import time
@@ -52,10 +53,16 @@ def cache(life_second=14400):
 
 @cache()
 def get_token(name: str):
+    """
+    >>> get_token("bigzhu")
+    fu
+    """
     # imaginary API call to get token
     return {"name": name, "time": time.time()}
 
 
 if __name__ == "__main__":
     print(get_token("bigzhu"))
-    print(get_token("bigzhu2"))
+    import doctest
+
+    doctest.testmod(verbose=False, optionflags=doctest.ELLIPSIS)

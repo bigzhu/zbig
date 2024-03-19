@@ -10,6 +10,8 @@ def cn_now(str_in: str):
 
     >>> cn_now('BigZhu')
     2...-... ... BigZhu
+    >>> cn_now('こんにちは世界！')
+    2...-... ... こんにちは世界！
 
     """
     t = ztime.cn_now()
@@ -23,4 +25,4 @@ if __name__ == "__main__":
     # cn_now("안녕하세요 세계!")
     import doctest
 
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
+    doctest.testmod(verbose=False, optionflags=doctest.ELLIPSIS)
