@@ -1,5 +1,9 @@
+#!/usr/bin/env python
 import unicodedata
 import curses
+from collections.abc import Callable
+from schedule import Job
+import schedule
 
 # 算出有几个非英文字符
 
@@ -28,8 +32,10 @@ def get_max_lens(rows: list):
     return max_len
 
 
-def table(rows: list, spliter: str):
+# 格式化并修复 ljust bug
+def format_rows(rows: list, spliter: str) -> list:
     max_lens = get_max_lens(rows)
+    formated_rows = []
     for row in rows:
         # formated_row = [str(row[i]).ljust(max_lens[i]) for i in range(len(row))]
         # ljust 使用 len 判断长度, 支持非英文字符, 导致对每个非英文字符多填充了一个空白
@@ -38,45 +44,48 @@ def table(rows: list, spliter: str):
             str(row[i]).ljust(max_lens[i] - wide_chars(str(row[i])))
             for i in range(len(row))
         ]
-        print(spliter.join(formated_row))
+        formated_rows.append(spliter.join(formated_row))
+    return formated_rows
+
+
+def table(rows: list, spliter: str):
+    """
+    >>> data = [
+    ...     ["User", "Host", "Descriptions"],
+    ...     ["bigzhu", "ssh.entube.app", "digitalocean"],
+    ... ]
+    >>> table(data, "~")
+    User  ~Host          ~Descriptions
+    bigzhu~ssh.entube.app~digitalocean
+    """
+
+    for i in format_rows(rows, spliter):
+        print(i)
 
 
 # 刷新绘制, 不会重复输出表格内容
-def curses_table(rows: list, spliter: str):
+def curses_table(get_rows: Callable, job: Job, spliter: str = "    "):
+    """
+    get_rows 返回值为 rows 的函数
+    job 定义的刷新周期, 比如 schedule.every(1).minutes
+    """
     stdscr = curses.initscr()
-    # Clear screen
-    stdscr.clear()
-    max_lens = get_max_lens(rows)
-    for row in rows:
-        # formated_row = [str(row[i]).ljust(max_lens[i]) for i in range(len(row))]
-        # ljust 使用 len 判断长度, 支持非英文字符, 导致对每个非英文字符多填充了一个空白
-        # 解决办法是算出有n个非英字符, just 长度-n
-        formated_row = [
-            str(row[i]).ljust(max_lens[i] - wide_chars(str(row[i])))
-            for i in range(len(row))
-        ]
-        stdscr.addstr(spliter.join(formated_row) + "\n")
 
-    stdscr.refresh()
-    stdscr.getkey()
+    def do():
+        stdscr.clear()
+        rows = get_rows()
+        for i in format_rows(rows, spliter):
+            stdscr.addstr(i + "\n")
+        stdscr.refresh()
+        # stdscr.getkey()
+
+    job.do(do)
+    do()
+    while True:
+        schedule.run_pending()
 
 
 if __name__ == "__main__":
-    import time
+    import doctest
 
-    # table(data, " ")
-    while True:
-        data = [
-            ["用户名", "服务器地址", "服务器的一些说明"],
-            ["用户名User", f"{time.time()}", "Description"],
-            ["User", "Host", "Description"],
-            ["root", "h.bigzhu.net", "dump"],
-            ["root", "racknerd.bigzhu.net", "racknerd"],
-            ["bigzhu", "ssh.entube.app", "digitalocean"],
-        ]
-        curses_table(data, "  ")
-        time.sleep(2)
-    # i = "服务器地址什么"
-    # j = "qwertyuiop"
-    # print(width(i))
-    # print(len(i))
+    doctest.testmod(verbose=False, optionflags=doctest.ELLIPSIS)

@@ -4,9 +4,17 @@
 
 ## change log
 
+### 0.1.14
+
+curses_table [自动刷新](自动刷新)
+
+### 0.1.13
+
+增加 curses_table
+
 ### 0.1.9
 
-- 支持非英文的 table print
+支持非英文的 table print
 
 ## test
 
