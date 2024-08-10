@@ -62,7 +62,7 @@ def get_token(name: str):
 
 
 if __name__ == "__main__":
-    print(get_token("bigzhu"))
+    # print(get_token("bigzhu"))
     import doctest
 
     doctest.testmod(verbose=False, optionflags=doctest.ELLIPSIS)
