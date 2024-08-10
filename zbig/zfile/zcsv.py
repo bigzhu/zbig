@@ -35,6 +35,19 @@ def write_csv_append(file_path: str, row: list):
         csvwriter.writerow(row)
 
 
+def write_csv_delete(file_path: str, number: int):
+    """
+    >>> write_csv_delete("hosts.csv", 15)
+    """
+    current_rows = read_csv(file_path)
+    if len(current_rows) < number:
+        raise ValueError(f"Does't exist number {number} data")
+    with open(file_path, "w", newline="") as wrt:
+        writer = csv.writer(wrt, lineterminator="\n")
+        for row in current_rows:
+            writer.writerow(row)
+
+
 def is_duplicate(file_path: str, row: list) -> bool:
     """
 
