@@ -8,79 +8,98 @@ import schedule
 # 算出有几个非英文字符
 
 
-def wide_chars(s):
-    return sum(unicodedata.east_asian_width(x) == "W" for x in s)
+def count_wide_characters(text: str) -> int:
+    """Count the number of wide (CJK) characters in text."""
+    return sum(unicodedata.east_asian_width(char) == "W" for char in text)
 
 
 # 非英文字符都算2个长度, 加上去
-def width(s) -> int:
-    return len(s) + wide_chars(s)
+def calculate_display_width(text: str) -> int:
+    """Calculate the display width of text including wide characters."""
+    return len(text) + count_wide_characters(text)
 
 
 # 获取最长
-def get_max_lens(rows: list):
-    # 初始化为 0
-    max_len = [0] * len(rows[0])
-    for row in rows:
-        for i in range(len(row)):
-            # 要转 str, 避免错误
-            str_width = width(str(row[i]))
-            # print(row[i])
-            # print(str_width)
-            if str_width > max_len[i]:
-                max_len[i] = str_width
-    return max_len
+def get_column_max_widths(table_rows: list) -> list[int]:
+    """Calculate the maximum width for each column in the table."""
+    column_widths = [0] * len(table_rows[0])
+    for row_data in table_rows:
+        for column_index in range(len(row_data)):
+            cell_content = str(row_data[column_index])
+            cell_width = calculate_display_width(cell_content)
+            if cell_width > column_widths[column_index]:
+                column_widths[column_index] = cell_width
+    return column_widths
 
 
 # 格式化并修复 ljust bug
-def format_rows(rows: list, spliter: str) -> list:
-    max_lens = get_max_lens(rows)
-    formated_rows = []
-    for row in rows:
-        # formated_row = [str(row[i]).ljust(max_lens[i]) for i in range(len(row))]
-        # ljust 使用 len 判断长度, 支持非英文字符, 导致对每个非英文字符多填充了一个空白
-        # 解决办法是算出有n个非英字符, just 长度-n
-        formated_row = [
-            str(row[i]).ljust(max_lens[i] - wide_chars(str(row[i])))
-            for i in range(len(row))
-        ]
-        formated_rows.append(spliter.join(formated_row))
-    return formated_rows
+def format_table_rows(table_rows: list, column_separator: str) -> list[str]:
+    """Format table rows with proper alignment for wide characters."""
+    column_widths = get_column_max_widths(table_rows)
+    formatted_rows = []
+
+    for row_data in table_rows:
+        # Handle wide characters by adjusting padding
+        formatted_cells = []
+        for column_index in range(len(row_data)):
+            cell_content = str(row_data[column_index])
+            # Adjust padding to account for wide characters
+            padding_width = column_widths[column_index] - count_wide_characters(
+                cell_content
+            )
+            padded_cell = cell_content.ljust(padding_width)
+            formatted_cells.append(padded_cell)
+
+        formatted_rows.append(column_separator.join(formatted_cells))
+    return formatted_rows
 
 
-def table(rows: list, spliter: str):
+def print_table(table_data: list, column_separator: str = "  ") -> None:
     """
+    Print a formatted table to stdout.
+
+    Args:
+        table_data: List of rows, where each row is a list of cell values
+        column_separator: String to separate columns
+
     >>> data = [
     ...     ["User", "Host", "Descriptions"],
     ...     ["bigzhu", "ssh.entube.app", "digitalocean"],
     ... ]
-    >>> table(data, "~")
+    >>> print_table(data, "~")
     User  ~Host          ~Descriptions
     bigzhu~ssh.entube.app~digitalocean
     """
-
-    for i in format_rows(rows, spliter):
-        print(i)
+    formatted_rows = format_table_rows(table_data, column_separator)
+    for formatted_row in formatted_rows:
+        print(formatted_row)
 
 
 # 刷新绘制, 不会重复输出表格内容
-def curses_table(get_rows: Callable, job: Job, spliter: str = "    "):
+def display_live_table(
+    data_provider: Callable, refresh_schedule: Job, column_separator: str = "    "
+) -> None:
     """
-    get_rows 返回值为 rows 的函数
-    job 定义的刷新周期, 比如 schedule.every(1).minutes
+    Display a table that refreshes automatically using curses.
+
+    Args:
+        data_provider: Function that returns table data
+        refresh_schedule: Schedule object defining refresh interval
+        column_separator: String to separate columns
     """
-    stdscr = curses.initscr()
+    screen = curses.initscr()
 
-    def do():
-        stdscr.clear()
-        rows = get_rows()
-        for i in format_rows(rows, spliter):
-            stdscr.addstr(i + "\n")
-        stdscr.refresh()
-        # stdscr.getkey()
+    def refresh_display():
+        screen.clear()
+        current_data = data_provider()
+        formatted_rows = format_table_rows(current_data, column_separator)
+        for formatted_row in formatted_rows:
+            screen.addstr(formatted_row + "\n")
+        screen.refresh()
 
-    job.do(do)
-    do()
+    refresh_schedule.do(refresh_display)
+    refresh_display()  # Initial display
+
     while True:
         schedule.run_pending()
 

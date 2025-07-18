@@ -4,66 +4,92 @@ import json
 import os
 import time
 from typing import Callable, Any
-from zbig.zhash.args import args_hash
+from zbig.zhash.args import generate_arguments_hash
 
 
 # 使用 json 缓存函数
 
 
 # 默认 4 小时: 14400 秒
-def cache(life_second: int = 14400) -> Callable:
-    # check is file modify time in 4 hours
-    def check_file_is_alive(file_name: str) -> bool:
-        file = f"{file_name}.json"
-        if not os.path.exists(file):
+def json_cache(cache_lifetime_seconds: int = 14400) -> Callable:
+    """
+    Decorator for caching function results to JSON files.
+
+    Args:
+        cache_lifetime_seconds: Cache lifetime in seconds (default: 4 hours)
+
+    Returns:
+        Decorator function
+    """
+
+    def is_cache_file_valid(cache_file_base_name: str) -> bool:
+        """Check if cache file exists and is within the lifetime."""
+        cache_file_path = f"{cache_file_base_name}.json"
+        if not os.path.exists(cache_file_path):
             return False
-        # get the modify time of the file
-        modify_time = os.path.getmtime(file)
-        # get the current time
-        current_time = time.time()
-        # check if the file modify time is out of 4 hours ago
-        return current_time - modify_time <= life_second
 
-    def read_from_file(file_name: str) -> Any:
-        with open(f"{file_name}.json", "r", encoding="utf-8") as outfile:
-            data = json.load(outfile)
-        return data
+        file_modification_time = os.path.getmtime(cache_file_path)
+        current_timestamp = time.time()
+        return current_timestamp - file_modification_time <= cache_lifetime_seconds
 
-    def save_to_file(file_name: str, content: Any) -> None:
-        # Create directory if it doesn't exist
-        cache_dir = os.path.dirname(f"{file_name}.json")
-        if cache_dir and not os.path.exists(cache_dir):
-            os.makedirs(cache_dir, exist_ok=True)
+    def load_cached_data(cache_file_base_name: str) -> Any:
+        """Load data from cache file."""
+        cache_file_path = f"{cache_file_base_name}.json"
+        with open(cache_file_path, "r", encoding="utf-8") as cache_file:
+            cached_data = json.load(cache_file)
+        return cached_data
 
-        with open(f"{file_name}.json", "w", encoding="utf-8") as outfile:
-            json.dump(content, outfile, ensure_ascii=False, separators=(",", ":"))
+    def save_data_to_cache(cache_file_base_name: str, data_to_cache: Any) -> None:
+        """Save data to cache file."""
+        cache_file_path = f"{cache_file_base_name}.json"
+        cache_directory = os.path.dirname(cache_file_path)
 
-    def decorator(fn: Callable) -> Callable:
-        def wrapped(*args: Any, **kwargs: Any) -> Any:
-            # 用函数名和入参作为 key
-            hash_name = args_hash(*args, **kwargs)
-            file_name = f"{fn.__name__}_{hash_name}"
-            if check_file_is_alive(file_name):
-                res = read_from_file(file_name)
-                if res:
-                    return res
-            res = fn(*args, **kwargs)
-            save_to_file(file_name, res)
-            return res
+        if cache_directory and not os.path.exists(cache_directory):
+            os.makedirs(cache_directory, exist_ok=True)
 
-        return wrapped
+        with open(cache_file_path, "w", encoding="utf-8") as cache_file:
+            json.dump(
+                data_to_cache, cache_file, ensure_ascii=False, separators=(",", ":")
+            )
 
-    return decorator
+    def cache_decorator(target_function: Callable) -> Callable:
+        """The actual decorator function."""
+
+        def cached_function_wrapper(*function_args: Any, **function_kwargs: Any) -> Any:
+            # Generate cache key from function name and arguments
+            arguments_hash = generate_arguments_hash(*function_args, **function_kwargs)
+            cache_key = f"{target_function.__name__}_{arguments_hash}"
+
+            # Try to load from cache first
+            if is_cache_file_valid(cache_key):
+                cached_result = load_cached_data(cache_key)
+                if cached_result is not None:
+                    return cached_result
+
+            # Execute function and cache result
+            function_result = target_function(*function_args, **function_kwargs)
+            save_data_to_cache(cache_key, function_result)
+            return function_result
+
+        return cached_function_wrapper
+
+    return cache_decorator
 
 
-@cache()
-def get_token(name: str):
+@json_cache()
+def get_user_token(username: str):
     """
-    >>> get_token("bigzhu")
-    fu
+    Example function demonstrating cache usage.
+
+    >>> get_user_token("bigzhu")
+    {'name': 'bigzhu', 'timestamp': ...}
     """
-    # imaginary API call to get token
-    return {"name": name, "time": time.time()}
+    # Simulate API call to get token
+    return {"name": username, "timestamp": time.time()}
+
+
+# Backward compatibility alias
+cache = json_cache
 
 
 if __name__ == "__main__":

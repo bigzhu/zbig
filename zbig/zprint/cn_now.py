@@ -14,7 +14,7 @@ def cn_now(str_in: str):
     2...-... ... こんにちは世界！
 
     """
-    t = ztime.cn_now()
+    t = ztime.get_china_current_time()
     print(f"{t} {str_in}", flush=True)
 
 

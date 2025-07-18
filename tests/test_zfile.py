@@ -5,7 +5,7 @@ import tempfile
 import pytest
 from pathlib import Path
 
-from zbig.zfile.zcsv import read_csv, write_csv_append, write_csv_delete, is_duplicate
+from zbig.zfile.zcsv import read_csv, append_csv_row, delete_csv_row, is_duplicate_row
 
 
 class TestZCSV:
@@ -38,7 +38,7 @@ class TestZCSV:
             temp_path = f.name
 
         try:
-            write_csv_append(temp_path, ["Bob", "30"])
+            append_csv_row(temp_path, ["Bob", "30"])
             header, rows = read_csv(temp_path)
             assert len(rows) == 2
             assert rows[1] == ["Bob", "30"]
@@ -54,8 +54,8 @@ class TestZCSV:
             temp_path = f.name
 
         try:
-            with pytest.raises(ValueError, match="Duplicate data"):
-                write_csv_append(temp_path, ["Alice", "25"])
+            with pytest.raises(ValueError, match="Duplicate row data"):
+                append_csv_row(temp_path, ["Alice", "25"])
         finally:
             Path(temp_path).unlink()
 
@@ -68,8 +68,8 @@ class TestZCSV:
             temp_path = f.name
 
         try:
-            assert is_duplicate(temp_path, ["Alice", "25"]) is True
-            assert is_duplicate(temp_path, ["Bob", "30"]) is False
+            assert is_duplicate_row(temp_path, ["Alice", "25"]) is True
+            assert is_duplicate_row(temp_path, ["Bob", "30"]) is False
         finally:
             Path(temp_path).unlink()
 
@@ -83,7 +83,7 @@ class TestZCSV:
             temp_path = f.name
 
         try:
-            write_csv_delete(temp_path, 0)  # Delete first row (Alice)
+            delete_csv_row(temp_path, 0)  # Delete first row (Alice)
             header, rows = read_csv(temp_path)
             assert len(rows) == 1
             assert rows[0] == ["Bob", "30"]
@@ -99,7 +99,7 @@ class TestZCSV:
             temp_path = f.name
 
         try:
-            with pytest.raises(ValueError, match="Doesn't exist number"):
-                write_csv_delete(temp_path, 5)
+            with pytest.raises(ValueError, match="Row index .* out of range"):
+                delete_csv_row(temp_path, 5)
         finally:
             Path(temp_path).unlink()

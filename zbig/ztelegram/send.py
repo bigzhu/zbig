@@ -1,51 +1,56 @@
 #!/usr/bin/env python
 
 import os
-from zbig.ztime import cn_now
-from zbig.ztelegram.define import bot, CHAT_ID
+from zbig.ztime import get_china_current_time
+from zbig.ztelegram.define import telegram_bot as bot, TELEGRAM_CHAT_ID as CHAT_ID
 from zbig.ztelegram.exceptions import TelegramSendError, FileNotFoundError
 
 
-def send_message(message: str) -> None:
+def send_text_message(message_text: str) -> None:
     """
-    Send a text message via Telegram bot.
+    Send a text message via Telegram bot with timestamp.
 
     Args:
-        message: The message text to send
+        message_text: The message content to send
 
     Raises:
         TelegramSendError: If sending the message fails
 
-    >>> send_message("zbig send_message test")  # doctest: +SKIP
+    >>> send_text_message("zbig send_message test")  # doctest: +SKIP
     """
     try:
-        bot.send_message(chat_id=CHAT_ID, text=f"{cn_now()} {message}")
-    except Exception as e:
-        raise TelegramSendError(f"Failed to send message: {e}") from e
+        timestamped_message = f"{get_china_current_time()} {message_text}"
+        bot.send_message(chat_id=CHAT_ID, text=timestamped_message)
+    except Exception as telegram_error:
+        raise TelegramSendError(
+            f"Failed to send message: {telegram_error}"
+        ) from telegram_error
 
 
-def send_photo(file_path: str, caption: str) -> None:
+def send_photo_message(image_path: str, photo_caption: str) -> None:
     """
-    Send a photo via Telegram bot.
+    Send a photo via Telegram bot with caption.
 
     Args:
-        file_path: Path to the image file
-        caption: Caption text for the photo
+        image_path: Path to the image file
+        photo_caption: Caption text for the photo
 
     Raises:
         FileNotFoundError: If the specified file doesn't exist
         TelegramSendError: If sending the photo fails
 
-    >>> send_photo('WechatIMG1021.jpg', 'test')  # doctest: +SKIP
+    >>> send_photo_message('WechatIMG1021.jpg', 'test')  # doctest: +SKIP
     """
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"File not found: {file_path}")
+    if not os.path.exists(image_path):
+        raise FileNotFoundError(f"Image file not found: {image_path}")
 
     try:
-        with open(file_path, "rb") as photo:
-            bot.send_photo(chat_id=CHAT_ID, photo=photo, caption=caption)
-    except Exception as e:
-        raise TelegramSendError(f"Failed to send photo: {e}") from e
+        with open(image_path, "rb") as photo_file:
+            bot.send_photo(chat_id=CHAT_ID, photo=photo_file, caption=photo_caption)
+    except Exception as telegram_error:
+        raise TelegramSendError(
+            f"Failed to send photo: {telegram_error}"
+        ) from telegram_error
 
 
 if __name__ == "__main__":

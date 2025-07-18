@@ -2,19 +2,26 @@
 from datetime import datetime
 import pytz
 
-# Get the timezone object for China
-tz_cn = pytz.timezone("Asia/Shanghai")
+# China timezone (Shanghai)
+CHINA_TIMEZONE = pytz.timezone("Asia/Shanghai")
 
 
-def cn_now() -> str:
+def get_china_current_time() -> str:
     """
+    Get current time in China timezone as formatted string.
 
-    >>> cn_now()
+    Returns:
+        Formatted timestamp string in YYYY-MM-DD HH:MM:SS format
+
+    >>> get_china_current_time()
     '2...-...-... ...:...:...'
-
     """
-    datetime_cn = datetime.now(tz_cn)
-    return datetime_cn.strftime("%Y-%m-%d %H:%M:%S")
+    china_datetime = datetime.now(CHINA_TIMEZONE)
+    return china_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+
+# Backward compatibility alias
+cn_now = get_china_current_time
 
 
 if __name__ == "__main__":
