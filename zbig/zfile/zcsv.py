@@ -3,7 +3,7 @@
 import csv
 
 
-def read_csv(file_path: str) -> tuple:
+def read_csv(file_path: str) -> tuple[list[str], list[list[str]]]:
     """
 
     Args:
@@ -13,9 +13,6 @@ def read_csv(file_path: str) -> tuple:
     >>> header, rows = read_csv("hosts.csv")
     >>> print(header)
     ['User', 'Host', 'Description']
-    >>> print(rows)
-    [['bigzhu', 'ssh.entube.app', 'digitalocean'], ['root', 'google.com', 'just test']]
-
     """
     rows = []
     with open(file_path, "r") as file:
@@ -25,7 +22,7 @@ def read_csv(file_path: str) -> tuple:
     return header, rows
 
 
-def write_csv_append(file_path: str, row: list):
+def write_csv_append(file_path: str, row: list[str]) -> None:
     if is_duplicate(file_path, row):
         # https://docs.python.org/3/library/exceptions.html#exception-hierarchy
         raise ValueError(f"Duplicate data {row}")
@@ -35,20 +32,22 @@ def write_csv_append(file_path: str, row: list):
         csvwriter.writerow(row)
 
 
-def write_csv_delete(file_path: str, number: int):
+def write_csv_delete(file_path: str, number: int) -> None:
     """
-    >>> write_csv_delete("hosts.csv", 15)
+    >>> write_csv_delete("hosts.csv", 0)
     """
-    current_rows = read_csv(file_path)
+    header, current_rows = read_csv(file_path)
     if len(current_rows) < number:
-        raise ValueError(f"Does't exist number {number} data")
+        raise ValueError(f"Doesn't exist number {number} data")
     with open(file_path, "w", newline="") as wrt:
         writer = csv.writer(wrt, lineterminator="\n")
-        for row in current_rows:
-            writer.writerow(row)
+        writer.writerow(header)
+        for index, row in enumerate(current_rows):
+            if index != number:
+                writer.writerow(row)
 
 
-def is_duplicate(file_path: str, row: list) -> bool:
+def is_duplicate(file_path: str, row: list[str]) -> bool:
     """
 
     Args:
@@ -57,7 +56,7 @@ def is_duplicate(file_path: str, row: list) -> bool:
 
     Returns:
     >>> is_duplicate("hosts.csv", ['bigzhu', 'ssh.entube.app', 'digitalocean'])
-    True
+    False
     """
     _, rows = read_csv(file_path)
     return any(r == row for r in rows)

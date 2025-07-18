@@ -1,4 +1,6 @@
 User,Host,Description
+bigzhu,10.0.0.160          ,金地我的主机
+root  ,10.0.0.143          ,金地服务器
 root  ,racknerd.bigzhu.net ,美国 racknerd 翻墙用 1c 1GB
 bigzhu,ssh.entube.app      ,contabo 德国高性能主机,部署服务用,一个月 5.5$, 4c 8GB
 bigzhu,45.147.45.179       ,awmbilisim 土耳其主机,用来买便宜东西用?, 性能凑合 2C 4GB
