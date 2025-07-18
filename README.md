@@ -1,5 +1,10 @@
 # zbig - Big Zhu Python Utility Library
 
+[![Test](https://github.com/bigzhu/zbig/actions/workflows/test.yml/badge.svg)](https://github.com/bigzhu/zbig/actions/workflows/test.yml)
+[![Lint](https://github.com/bigzhu/zbig/actions/workflows/lint.yml/badge.svg)](https://github.com/bigzhu/zbig/actions/workflows/lint.yml)
+[![PyPI version](https://badge.fury.io/py/zbig.svg)](https://badge.fury.io/py/zbig)
+[![Python versions](https://img.shields.io/pypi/pyversions/zbig.svg)](https://pypi.org/project/zbig/)
+
 一个包含各种实用工具的 Python 库，主要用于个人开发项目。
 
 ## 安装
