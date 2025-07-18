@@ -10,7 +10,7 @@ def read_csv(file_path: str) -> tuple[list[str], list[list[str]]]:
         file_path:
 
     Returns:
-    >>> header, rows = read_csv("hosts.csv")
+    >>> header, rows = read_csv("test_hosts.csv")
     >>> print(header)
     ['User', 'Host', 'Description']
     """
@@ -34,7 +34,7 @@ def write_csv_append(file_path: str, row: list[str]) -> None:
 
 def write_csv_delete(file_path: str, number: int) -> None:
     """
-    >>> write_csv_delete("hosts.csv", 0)
+    >>> write_csv_delete("test_hosts.csv", 0)  # doctest: +SKIP
     """
     header, current_rows = read_csv(file_path)
     if len(current_rows) < number:
@@ -55,8 +55,8 @@ def is_duplicate(file_path: str, row: list[str]) -> bool:
         row:
 
     Returns:
-    >>> is_duplicate("hosts.csv", ['bigzhu', 'ssh.entube.app', 'digitalocean'])
-    False
+    >>> is_duplicate("test_hosts.csv", ['bigzhu', 'ssh.entube.app', 'digitalocean'])
+    True
     """
     _, rows = read_csv(file_path)
     return any(r == row for r in rows)

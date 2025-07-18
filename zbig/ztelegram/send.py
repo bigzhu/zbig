@@ -16,7 +16,7 @@ def send_message(message: str) -> None:
     Raises:
         TelegramSendError: If sending the message fails
 
-    >>> send_message("zbig send_message test")
+    >>> send_message("zbig send_message test")  # doctest: +SKIP
     """
     try:
         bot.send_message(chat_id=CHAT_ID, text=f"{cn_now()} {message}")
@@ -36,7 +36,7 @@ def send_photo(file_path: str, caption: str) -> None:
         FileNotFoundError: If the specified file doesn't exist
         TelegramSendError: If sending the photo fails
 
-    >>> send_photo('WechatIMG1021.jpg', 'test')
+    >>> send_photo('WechatIMG1021.jpg', 'test')  # doctest: +SKIP
     """
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
