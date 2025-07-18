@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zbig"
-version = "0.1.22"
+version = "0.2.0"
 description = "Big Zhu Python Utility Library"
 authors = ["bigzhu <vermiliondun@gmail.com>"]
 readme = "README.md"
