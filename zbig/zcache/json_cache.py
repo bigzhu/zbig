@@ -34,9 +34,9 @@ def cache(life_second: int = 14400) -> Callable:
         cache_dir = os.path.dirname(f"{file_name}.json")
         if cache_dir and not os.path.exists(cache_dir):
             os.makedirs(cache_dir, exist_ok=True)
-        
+
         with open(f"{file_name}.json", "w", encoding="utf-8") as outfile:
-            json.dump(content, outfile, ensure_ascii=False, separators=(',', ':'))
+            json.dump(content, outfile, ensure_ascii=False, separators=(",", ":"))
 
     def decorator(fn: Callable) -> Callable:
         def wrapped(*args: Any, **kwargs: Any) -> Any:

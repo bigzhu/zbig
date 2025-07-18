@@ -40,7 +40,7 @@ def send_photo(file_path: str, caption: str) -> None:
     """
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
-    
+
     try:
         with open(file_path, "rb") as photo:
             bot.send_photo(chat_id=CHAT_ID, photo=photo, caption=caption)
