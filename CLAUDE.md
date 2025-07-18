@@ -47,21 +47,21 @@ The project follows a modular structure with each utility grouped by purpose:
 
 - **`zbig.zfile`**: File operations, primarily CSV handling (`zcsv.py`)
   - Functions: `read_csv()`, `write_csv_append()`, `write_csv_delete()`, `is_duplicate()`
-  
+
 - **`zbig.ztelegram`**: Telegram bot integration (`send.py`, `define.py`)
   - Functions: `send_message()`, `send_photo()`
   - Requires environment variables for bot configuration
-  
+
 - **`zbig.zprint`**: Enhanced printing and table formatting (`table.py`, `json_print.py`)
   - Supports Unicode/CJK characters with proper width calculation
   - Functions: `table()`, `curses_table()` for real-time refreshing tables
-  
+
 - **`zbig.ztime`**: Time utilities (`cn_now.py`)
   - China timezone-aware datetime formatting
-  
+
 - **`zbig.zcache`**: JSON-based function caching (`json_cache.py`)
   - Decorator `@cache()` with configurable TTL (default 4 hours)
-  
+
 - **`zbig.zhash`**: Hashing utilities (`args.py`)
   - Function: `args_hash()` for generating consistent hashes from function arguments
 

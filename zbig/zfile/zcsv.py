@@ -14,7 +14,7 @@ def read_csv(file_path: str) -> tuple[list[str], list[list[str]]]:
     >>> print(header)
     ['User', 'Host', 'Description']
     """
-    rows = []
+    rows: list[list[str]] = []
     with open(file_path, "r") as file:
         csvreader = csv.reader(file)
         header = next(csvreader)

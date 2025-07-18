@@ -20,10 +20,10 @@ class TestZConfig:
         settings = Settings()
         assert settings.log_level == "DEBUG"
 
-    @patch.dict(os.environ, {
-        "TELEGRAM_BOT_TOKEN": "test_token",
-        "TELEGRAM_CHAT_ID": "test_chat_id"
-    })
+    @patch.dict(
+        os.environ,
+        {"TELEGRAM_BOT_TOKEN": "test_token", "TELEGRAM_CHAT_ID": "test_chat_id"},
+    )
     def test_telegram_config_validation(self):
         """Test Telegram configuration validation."""
         settings = Settings()

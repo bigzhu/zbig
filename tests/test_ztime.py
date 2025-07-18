@@ -11,7 +11,7 @@ class TestZTime:
         """Test that cn_now returns correct format."""
         result = cn_now()
         # Should match YYYY-MM-DD HH:MM:SS format
-        pattern = r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
+        pattern = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}"
         assert re.match(pattern, result)
 
     def test_cn_now_returns_string(self):
