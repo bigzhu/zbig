@@ -44,6 +44,11 @@ def append_csv_row(file_path: str, row_data: list[str]) -> None:
         csv_writer.writerow(row_data)
 
 
+def write_csv_append(file_path: str, row_data: list[str]) -> None:
+    """Backward-compatible alias for append_csv_row."""
+    append_csv_row(file_path, row_data)
+
+
 def delete_csv_row(file_path: str, row_index: int) -> None:
     """
     Delete a specific row from CSV file by index.
@@ -68,6 +73,11 @@ def delete_csv_row(file_path: str, row_index: int) -> None:
                 csv_writer.writerow(row_data)
 
 
+def write_csv_delete(file_path: str, row_index: int) -> None:
+    """Backward-compatible alias for delete_csv_row."""
+    delete_csv_row(file_path, row_index)
+
+
 def is_duplicate_row(file_path: str, row_data: list[str]) -> bool:
     """
     Check if a row already exists in the CSV file.
@@ -84,6 +94,11 @@ def is_duplicate_row(file_path: str, row_data: list[str]) -> bool:
     """
     _, existing_rows = read_csv(file_path)
     return any(existing_row == row_data for existing_row in existing_rows)
+
+
+def is_duplicate(file_path: str, row_data: list[str]) -> bool:
+    """Backward-compatible alias for is_duplicate_row."""
+    return is_duplicate_row(file_path, row_data)
 
 
 if __name__ == "__main__":
